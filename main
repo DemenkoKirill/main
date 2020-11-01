@@ -1,12 +1,20 @@
 #импорт модулей
 from tkinter import *
-
+import pandas as pd
 def collect_data():
     '''функция для сбора и обработки данных в базу данных'''
     data = {}
+
+    name = ent_name.get()
+    print(name)
+    data['ФИО'] = name
+    bdate = ent_bdate.get()
+    print(bdate)
+    data['Дата рождения'] = bdate
     print(data)
-
-
+    global df
+    df = df.append(other=data, ignore_index=True)
+    df = df.drop_duplicates(subset=columns[:-2], keep="last")
 
 
 def open_text():
@@ -43,6 +51,11 @@ def open_buttons():
     but_frame.pack(side=TOP, anchor=E)
     but_data.pack(side=RIGHT, padx=10)
     but_close.pack(side=RIGHT, padx=10, pady=10)
+#проектирование базы данных
+columns = 'ФИО', 'дата рождения', 'возраст', 'пол', 'интересы', 'дата регистрации'
+df = pd.DataFrame(columns=columns)
+
+
 #установка основного окна
 root=Tk()
 
@@ -85,8 +98,8 @@ booleans_interest = bool_sc, bool_tech, bool_art, bool_tr, bool_sp, bool_an
 
 #кнопки
 but_frame = Frame(master=root)
-but_data = Button(master=but_frame, bg='#cbffc3', text='Enter', width=10, command=)
-but_close = Button(master=but_frame, bg='pink', text='Close', width=10, command=root.destroy)
+but_data = Button(master=but_frame, text='Enter', width=10, command=collect_data)
+but_close = Button(master=but_frame, text='Close', width=10, command=root.destroy)
 
 
 #функция развертывания
@@ -99,3 +112,18 @@ root.mainloop()
 #test_dict = {'name':'Kirill', 'age':'15'}
 #test_dict[здесь ключ ввести]
 #test_dict['education'] = 'высшее' для добавления в список ключа и его значения
+# df = pd.DataFrame(
+#     data={
+#         'key1':('val1', 'val2'),
+#         'key2':('val3', 'val4')
+#     },
+#     index=('a', 'b'),
+#     columns=('key1', 'key2')
+# )
+#list - редактируемый список
+#some_list=[1, '2', True, 2.72]
+#list=[]
+#some_list.pop - для удаления последнего элемента
+#some_list.remove('')для удаления определенного элемента
+#some_list.clear для очистки
+#tuple - для запрета изменения листа

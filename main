@@ -1,4 +1,7 @@
 #импорт модулей
+
+from main1 import retype_date
+from datetime import datetime
 from tkinter import *
 import pandas as pd
 def collect_data():
@@ -6,12 +9,15 @@ def collect_data():
     data = {}
 
     name = ent_name.get()
-    print(name)
     data['ФИО'] = name
-    bdate = ent_bdate.get()
-    print(bdate)
-    data['Дата рождения'] = bdate
-    print(data)
+
+    bdate = int(ent_bdate.get())
+    data['Дата рождения'] = retype_date(bdate)
+
+    reg_data= datetime.now()
+    data['дата регистрации'] = reg_data.date()
+
+
     global df
     df = df.append(other=data, ignore_index=True)
     df = df.drop_duplicates(subset=columns[:-2], keep="last")
@@ -127,3 +133,4 @@ root.mainloop()
 #some_list.remove('')для удаления определенного элемента
 #some_list.clear для очистки
 #tuple - для запрета изменения листа
+#вывод возраста!

@@ -1,6 +1,6 @@
 #импорт модулей
 
-from main1 import retype_date
+from support import retype_date
 from datetime import datetime
 from tkinter import *
 import pandas as pd
@@ -11,18 +11,41 @@ def collect_data():
     name = ent_name.get()
     data['ФИО'] = name
 
-    bdate = int(ent_bdate.get())
+    bdate = ent_bdate.get()
     data['Дата рождения'] = retype_date(bdate)
 
-    reg_data= datetime.now()
+
+    reg_data = datetime.now()
     data['дата регистрации'] = reg_data.date()
+
+    days_time = data['дата регистрации'] - data['Дата рождения']
+    age = days_time / 365.25
+    data['возраст'] = age.days
+
+    answer = var.get()
+    if answer == 0:
+        data['пол'] = 'мужской'
+    elif answer == 1:
+        data['пол'] = 'женский'
+
+
 
 
     global df
     df = df.append(other=data, ignore_index=True)
     df = df.drop_duplicates(subset=columns[:-2], keep="last")
 
-
+def get_interest():
+    
+    interest_list=[]
+    idx=0
+    while idx < len(booleans_interest):
+        bool_interest = booleans_interest[idx]
+        if bool_interest.get():
+            answer = interest_names[idx]
+            interest_list.append(answer)
+    idx += 1
+    return interest_list
 def open_text():
     '''Функции для распаковки строковых объектов'''
     text_frame.pack(side=TOP, anchor=W, pady=12, padx=6)
@@ -58,7 +81,7 @@ def open_buttons():
     but_data.pack(side=RIGHT, padx=10)
     but_close.pack(side=RIGHT, padx=10, pady=10)
 #проектирование базы данных
-columns = 'ФИО', 'дата рождения', 'возраст', 'пол', 'интересы', 'дата регистрации'
+columns = 'ФИО', 'возраст', 'пол', 'интересы', 'дата регистрации'
 df = pd.DataFrame(columns=columns)
 
 
@@ -101,7 +124,6 @@ flag_an, bool_an = create_flag(name=interest_names[5])
 #списки флагов и их булевый значения
 flags = flag_sc, flag_tech, flag_art, flag_tr, flag_sp, flag_an
 booleans_interest = bool_sc, bool_tech, bool_art, bool_tr, bool_sp, bool_an
-
 #кнопки
 but_frame = Frame(master=root)
 but_data = Button(master=but_frame, text='Enter', width=10, command=collect_data)
@@ -134,3 +156,4 @@ root.mainloop()
 #some_list.clear для очистки
 #tuple - для запрета изменения листа
 #вывод возраста!
+

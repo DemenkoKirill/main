@@ -13,8 +13,6 @@ def collect_data():
 
     bdate = ent_bdate.get()
     data['Дата рождения'] = retype_date(bdate)
-
-
     reg_data = datetime.now()
     data['дата регистрации'] = reg_data.date()
 
@@ -28,15 +26,21 @@ def collect_data():
     elif answer == 1:
         data['пол'] = 'женский'
 
+    interests = get_interest()
+    data['интересы'] = ', '.join(interests)
 
 
 
     global df
     df = df.append(other=data, ignore_index=True)
     df = df.drop_duplicates(subset=columns[:-2], keep="last")
+    clear_data()
+def clear_data():
+    ent_name.delete(0, END)
+    ent_bdate.delete(0, END)
 
 def get_interest():
-    
+
     interest_list=[]
     idx=0
     while idx < len(booleans_interest):
@@ -44,7 +48,7 @@ def get_interest():
         if bool_interest.get():
             answer = interest_names[idx]
             interest_list.append(answer)
-    idx += 1
+        idx += 1
     return interest_list
 def open_text():
     '''Функции для распаковки строковых объектов'''
@@ -84,13 +88,10 @@ def open_buttons():
 columns = 'ФИО', 'возраст', 'пол', 'интересы', 'дата регистрации'
 df = pd.DataFrame(columns=columns)
 
-
 #установка основного окна
 root=Tk()
 
 root.title(string='Регистрационный лист')
-
-
 
 #окно с текстом
 text_frame = Frame(master=root)
@@ -114,7 +115,7 @@ interest_frame = Frame(master=root)
 
 interest_lbl = Label(master=interest_frame, text='выберите интересы:')
 interest_names = 'Наука', 'Техника', 'Искусство', 'Путешествия', 'Спорт', 'Другое'
-#создание лагов
+#создание флагов
 flag_sc, bool_sc = create_flag(name=interest_names[0])
 flag_tech, bool_tech = create_flag(name=interest_names[1])
 flag_art, bool_art = create_flag(name=interest_names[2])
@@ -128,7 +129,6 @@ booleans_interest = bool_sc, bool_tech, bool_art, bool_tr, bool_sp, bool_an
 but_frame = Frame(master=root)
 but_data = Button(master=but_frame, text='Enter', width=10, command=collect_data)
 but_close = Button(master=but_frame, text='Close', width=10, command=root.destroy)
-
 
 #функция развертывания
 open_text()
@@ -156,4 +156,5 @@ root.mainloop()
 #some_list.clear для очистки
 #tuple - для запрета изменения листа
 #вывод возраста!
-
+#"разделение".join('20','20','22020')
+#Entry().delete(0,END)

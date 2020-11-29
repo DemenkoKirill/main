@@ -1,6 +1,6 @@
-
-
+import pandas as pd
 from datetime import date
+
 
 def retype_date(string):
     seps = '/', '.', '-', ' '
@@ -11,7 +11,7 @@ def retype_date(string):
             bdate = string.split(seps[idx])
             break
         else:
-            idx +=1
+            idx += 1
     day, month, year = bdate
     result = date(
         year=int(year),
@@ -19,3 +19,21 @@ def retype_date(string):
         day=int(day)
     )
     return result
+
+
+def read_db(name):
+    df = pd.read_csv(name, index_col=0)
+    return df
+
+
+def write_db(data, name):
+    df = read_db(name)
+
+    df = df.append(data, ignore_index=True)
+
+    df = df.dropna(how='all', axis=0)
+    df = df.drop_duplicates(subset=df.columns[:-2], keep='last')
+
+    df.to_csv(name, index=True)
+
+# "разделение".join('20','20','22020')
